@@ -1,9 +1,6 @@
-package myplayground.example.jakpost.ui.activities.search
+package myplayground.example.jakpost.ui.screens.search
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,8 +20,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,13 +28,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import myplayground.example.jakpost.R
-import myplayground.example.jakpost.ui.News
+import myplayground.example.jakpost.model.News
 import myplayground.example.jakpost.ui.components.Search
 import myplayground.example.jakpost.ui.theme.JakPostTheme
 import myplayground.example.jakpost.ui.theme.LightStroke
 import myplayground.example.jakpost.ui.theme.Subtitle
+import myplayground.example.jakpost.ui.utils.ViewModelFactory
 import myplayground.example.jakpost.ui.utils.debugPlaceholder
 
 val sampleNews = listOf(
@@ -73,74 +69,70 @@ val sampleNews = listOf(
     ),
 )
 
-class SearchActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            JakPostTheme {
-                JakPostComposeApp()
-            }
-        }
-    }
+@Composable
+fun SearchScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SearchViewModel = viewModel(
+        factory = ViewModelFactory()
+    ),
+    navigateBack: () -> Unit,
+) {
+    SearchContent(
+        modifier = modifier,
+        onBackClick = navigateBack,
+    )
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun HelloJetpackComposeAppPreview() {
+fun SearchContentPreview() {
     JakPostTheme {
-        JakPostComposeApp()
+        SearchContent(Modifier)
     }
 }
 
 @Composable
-fun JakPostComposeApp() {
-    Surface(
-        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
+fun SearchContent(modifier: Modifier, onBackClick: () -> Unit = {}) {
+    Column(
+        modifier = modifier,
     ) {
-        Scaffold(
-            topBar = {
-                Row(
-                    modifier = Modifier
-                        .height(80.dp)
-                        .fillMaxWidth()
-                        .background(color = MaterialTheme.colorScheme.primary)
-                        .padding(start = 12.dp, end = 12.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Previous",
-                        tint = MaterialTheme.colorScheme.onPrimary,
+
+        Row(
+            modifier = Modifier
+                .height(80.dp)
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.primary)
+                .padding(start = 12.dp, end = 12.dp)
+        ) {
+            Icon(imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Previous",
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .size(36.dp)
+                    .clickable {
+                        onBackClick()
+                    })
+            Spacer(modifier = Modifier.width(20.dp))
+            Search(
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
+        Box(modifier = Modifier.weight(1F)) {
+            LazyColumn {
+                items(sampleNews) { news ->
+                    NewsBlock(news)
+                    Divider(
+                        color = LightStroke,
+                        thickness = 1.dp,
                         modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .size(44.dp)
-                            .clickable {}
-                            .padding(end = 20.dp)
+                            .padding(start = 12.dp, end = 12.dp)
+                            .fillMaxWidth()
                     )
-                    Search(
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
-                }
-            }
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier.padding(innerPadding),
-            ) {
-                LazyColumn {
-                    items(sampleNews) {  news ->
-                        NewsBlock(news)
-                        Divider(
-                            color = LightStroke,
-                            thickness = 1.dp,
-                            modifier = Modifier
-                                .padding(start = 12.dp, end = 12.dp)
-                                .fillMaxWidth()
-                        )
-                    }
                 }
             }
         }
-        //        GreetingList(sampleName)
     }
 }
 
@@ -167,7 +159,8 @@ private fun NewsBlock(news: News) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = news.publishedAt, color = Subtitle,
+                text = news.publishedAt,
+                color = Subtitle,
                 style = MaterialTheme.typography.labelMedium
             )
         }

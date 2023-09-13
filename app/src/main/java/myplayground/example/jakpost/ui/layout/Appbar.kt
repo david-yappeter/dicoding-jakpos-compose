@@ -19,11 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import myplayground.example.jakpost.R
+import myplayground.example.jakpost.ui.navigation.Screen
 import myplayground.example.jakpost.ui.theme.JakPostTheme
 
 @Composable
-fun Appbar() {
+fun Appbar(
+    navController: NavHostController
+) {
     Box(
         modifier = Modifier
             .height(80.dp)
@@ -54,6 +60,9 @@ fun Appbar() {
                 .size(40.dp)
                 .align(Alignment.CenterEnd)
                 .clickable {
+                    navController.navigate(Screen.Search.route) {
+                        //                        popUpTo(navController.graph.findStartDestination().id)
+                    }
                 }
         )
     }
@@ -63,6 +72,6 @@ fun Appbar() {
 @Composable
 fun AppbarPreview() {
     JakPostTheme {
-        Appbar()
+        Appbar(rememberNavController())
     }
 }

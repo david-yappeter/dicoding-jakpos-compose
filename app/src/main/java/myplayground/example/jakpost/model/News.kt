@@ -1,4 +1,4 @@
-package myplayground.example.jakpost.ui
+package myplayground.example.jakpost.model
 
 data class News(
     val link: String,
