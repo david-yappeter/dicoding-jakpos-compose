@@ -1,5 +1,6 @@
 package myplayground.example.jakpost.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.CircleShape
@@ -20,11 +21,16 @@ import myplayground.example.jakpost.ui.theme.JakPostTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Search(modifier: Modifier = Modifier) {
+fun Search(
+    modifier: Modifier = Modifier,
+    query: String = "",
+    onQueryChange: (String) -> Unit = {},
+    onSearch: (String) -> Unit = {},
+) {
     SearchBar(
-        query = "",
-        onQueryChange = {},
-        onSearch = {},
+        query = query,
+        onQueryChange = onQueryChange,
+        onSearch = onSearch,
         active = false,
         onActiveChange = {},
         leadingIcon = {
@@ -38,7 +44,10 @@ fun Search(modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.Default.Clear,
                 contentDescription = "Clear",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.clickable {
+                    onQueryChange("")
+                }
             )
         },
         placeholder = {

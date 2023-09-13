@@ -22,8 +22,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,8 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import myplayground.example.jakpost.R
+import myplayground.example.jakpost.di.Injection
 import myplayground.example.jakpost.model.News
+import myplayground.example.jakpost.ui.common.UiState
 import myplayground.example.jakpost.ui.components.Search
+import myplayground.example.jakpost.ui.components.shimmerBrush
 import myplayground.example.jakpost.ui.theme.JakPostTheme
 import myplayground.example.jakpost.ui.theme.LightStroke
 import myplayground.example.jakpost.ui.theme.Subtitle
@@ -73,14 +79,41 @@ val sampleNews = listOf(
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = viewModel(
-        factory = ViewModelFactory()
+        factory = ViewModelFactory(Injection.provideNewsRepository())
     ),
     navigateBack: () -> Unit,
 ) {
-    SearchContent(
-        modifier = modifier,
-        onBackClick = navigateBack,
-    )
+    val uiState by viewModel.uiState.collectAsState(initial = UiState.Loading)
+    val query by viewModel.query
+
+
+    when (uiState) {
+        is UiState.Loading -> {
+            SearchContent(
+                isLoading = true,
+                listNews = listOf(),
+                modifier = modifier,
+                onBackClick = navigateBack,
+                query = query,
+                onQueryChange = viewModel::onQueryChange,
+                onSearch = viewModel::onSearch
+            )
+        }
+
+        is UiState.Success -> {
+            SearchContent(
+                isLoading = false,
+                listNews = (uiState as UiState.Success).data,
+                modifier = modifier,
+                onBackClick = navigateBack,
+                query = query,
+                onQueryChange = viewModel::onQueryChange,
+                onSearch = viewModel::onSearch
+            )
+        }
+
+        is UiState.Error -> {}
+    }
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
@@ -88,12 +121,27 @@ fun SearchScreen(
 @Composable
 fun SearchContentPreview() {
     JakPostTheme {
-        SearchContent(Modifier)
+        SearchContent(
+            isLoading = false,
+            listNews = sampleNews,
+            modifier = Modifier,
+            query = "",
+            onQueryChange = {},
+            onSearch = {}
+        )
     }
 }
 
 @Composable
-fun SearchContent(modifier: Modifier, onBackClick: () -> Unit = {}) {
+fun SearchContent(
+    modifier: Modifier,
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: (String) -> Unit,
+    isLoading: Boolean,
+    listNews: List<News>,
+    onBackClick: () -> Unit = {}
+) {
     Column(
         modifier = modifier,
     ) {
@@ -116,20 +164,36 @@ fun SearchContent(modifier: Modifier, onBackClick: () -> Unit = {}) {
                     })
             Spacer(modifier = Modifier.width(20.dp))
             Search(
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier.align(Alignment.CenterVertically),
+                query = query,
+                onQueryChange = onQueryChange,
+                onSearch = onSearch,
             )
         }
         Box(modifier = Modifier.weight(1F)) {
             LazyColumn {
-                items(sampleNews) { news ->
-                    NewsBlock(news)
-                    Divider(
-                        color = LightStroke,
-                        thickness = 1.dp,
-                        modifier = Modifier
-                            .padding(start = 12.dp, end = 12.dp)
-                            .fillMaxWidth()
-                    )
+                if (isLoading) {
+                    items(5) {
+                        SkeletonLoadingItem()
+                        Divider(
+                            color = LightStroke,
+                            thickness = 1.dp,
+                            modifier = Modifier
+                                .padding(start = 12.dp, end = 12.dp)
+                                .fillMaxWidth()
+                        )
+                    }
+                } else {
+                    items(listNews) { news ->
+                        NewsBlock(news)
+                        Divider(
+                            color = LightStroke,
+                            thickness = 1.dp,
+                            modifier = Modifier
+                                .padding(start = 12.dp, end = 12.dp)
+                                .fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
@@ -173,5 +237,47 @@ private fun NewsBlock(news: News) {
 fun NewsBlockPreview() {
     JakPostTheme {
         NewsBlock(news = sampleNews[0])
+    }
+}
+
+@Composable
+fun SkeletonLoadingItem() {
+    Row(
+        modifier = Modifier.padding(20.dp, 16.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(70.dp)
+                .fillMaxHeight()
+                .clip(MaterialTheme.shapes.medium)
+                .background(shimmerBrush())
+        )
+        Spacer(modifier = Modifier.width(20.dp))
+        Column {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(shimmerBrush())
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(
+                modifier = Modifier
+                    .width(70.dp)
+                    .height(10.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(shimmerBrush())
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_4)
+@Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun SkeletonLoadingItemPreview() {
+    JakPostTheme {
+        SkeletonLoadingItem()
     }
 }
