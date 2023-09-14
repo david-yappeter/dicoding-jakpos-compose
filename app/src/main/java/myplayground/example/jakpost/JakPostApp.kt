@@ -6,14 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import myplayground.example.jakpost.ui.layout.Appbar
 import myplayground.example.jakpost.ui.layout.BottomBar
 import myplayground.example.jakpost.ui.navigation.Screen
 import myplayground.example.jakpost.ui.screens.home.HomeScreen
+import myplayground.example.jakpost.ui.screens.news_detail.NewsDetailScreen
 import myplayground.example.jakpost.ui.screens.search.SearchScreen
 import myplayground.example.jakpost.ui.screens.setting.SettingScreen
 
@@ -28,11 +31,15 @@ fun JakPostApp(
     Scaffold(
         modifier = modifier,
         topBar = {
-            if (currentRoute != Screen.Search.route)
+            if (currentRoute != Screen.Search.route
+                && currentRoute != Screen.NewsDetail.route
+            )
                 Appbar(navController = navController)
         },
         bottomBar = {
-            if (currentRoute != Screen.Search.route)
+            if (currentRoute != Screen.Search.route
+                && currentRoute != Screen.NewsDetail.route
+            )
                 BottomBar(navController = navController)
         }
     ) { innerPadding ->
@@ -41,6 +48,10 @@ fun JakPostApp(
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding),
         ) {
+            val navigateToNewsDetail: (Int) -> Unit = { id ->
+                navController.navigate(Screen.NewsDetail.createRoute(id))
+            }
+
             composable(Screen.Home.route) {
                 HomeScreen()
             }
@@ -52,6 +63,19 @@ fun JakPostApp(
             }
             composable(Screen.Search.route) {
                 SearchScreen(
+                    navigateBack = {
+                        navController.navigateUp()
+                    },
+                    navigateToNewsDetail = navigateToNewsDetail,
+                )
+            }
+            composable(
+                Screen.NewsDetail.route,
+                arguments = listOf(navArgument("id") { type = NavType.IntType }),
+            ) {
+                val id = it.arguments?.getInt("id") ?: -1
+                NewsDetailScreen(
+                    newsId = id,
                     navigateBack = {
                         navController.navigateUp()
                     }

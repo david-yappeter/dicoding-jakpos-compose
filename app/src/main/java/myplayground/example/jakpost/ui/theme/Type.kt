@@ -16,18 +16,39 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-    titleMedium = TextStyle(
+    headlineMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp,
         lineHeight = 30.sp,
         letterSpacing = 0.5.sp
     ),
-    labelMedium =TextStyle(
+    headlineSmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp,
         lineHeight = 21.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 25.sp,
+        lineHeight = 37.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 21.sp,
+        lineHeight = 28.sp,
         letterSpacing = 0.5.sp
     ),
     /* Other default text styles to override

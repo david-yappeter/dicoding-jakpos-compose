@@ -26,7 +26,7 @@ fun SettingScreen(
     modifier: Modifier = Modifier,
     themeViewModel: ThemeViewModel = viewModel(
         factory = ViewModelFactory(
-            Injection.provideNewsRepository(),
+            Injection.provideNewsRepository(LocalContext.current),
             DatastoreSettings.getInstance(LocalContext.current.dataStore),
         )
     ),

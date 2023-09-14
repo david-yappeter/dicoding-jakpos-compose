@@ -19,7 +19,7 @@ import myplayground.example.jakpost.ui.utils.ViewModelFactory
 class MainActivity : AppCompatActivity() {
     private val themeViewModel: ThemeViewModel by viewModels {
         ViewModelFactory(
-            Injection.provideNewsRepository(),
+            Injection.provideNewsRepository(context = this),
             DatastoreSettings.getInstance(applicationContext.dataStore),
         )
     }

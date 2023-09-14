@@ -47,46 +47,18 @@ import myplayground.example.jakpost.ui.theme.LightStroke
 import myplayground.example.jakpost.ui.theme.Subtitle
 import myplayground.example.jakpost.ui.utils.ViewModelFactory
 import myplayground.example.jakpost.ui.utils.debugPlaceholder
-
-val sampleNews = listOf(
-    News(
-        link = "https://jakpost.vercel.app/api/detailpost/indonesia/2023/07/10/jakarta-police-cling-to-staggered-working-hours-plan-despite-skepticism",
-        title = "Jakarta Police cling to staggered working hours plan despite skepticism",
-        image = "https://img.jakpost.net/c/2023/02/01/2023_02_01_135079_1675230408._thumbnail.jpg",
-        headline = "The Jakarta Police have continued to advocate for staggered working hours to alleviate Jakarta's perennial traffic woes, even after failing to convince workers and employers to alter their schedules last year.",
-        category = "Jakarta",
-        publishedAt = "2 months ago",
-        premiumBadge = "premium",
-    ),
-    News(
-        link = "https://jakpost.vercel.app/api/detailpost/indonesia/2023/07/10/jakarta-police-cling-to-staggered-working-hours-plan-despite-skepticism",
-        title = "Jakarta Police cling to staggered working hours plan despite skepticism",
-        image = "https://img.jakpost.net/c/2023/02/01/2023_02_01_135079_1675230408._thumbnail.jpg",
-        headline = "The Jakarta Police have continued to advocate for staggered working hours to alleviate Jakarta's perennial traffic woes, even after failing to convince workers and employers to alter their schedules last year.",
-        category = "Jakarta",
-        publishedAt = "2 months ago",
-        premiumBadge = "premium",
-    ),
-    News(
-        link = "https://jakpost.vercel.app/api/detailpost/indonesia/2023/07/10/jakarta-police-cling-to-staggered-working-hours-plan-despite-skepticism",
-        title = "Jakarta Police cling to staggered working hours plan despite skepticism",
-        image = "https://img.jakpost.net/c/2023/02/01/2023_02_01_135079_1675230408._thumbnail.jpg",
-        headline = "The Jakarta Police have continued to advocate for staggered working hours to alleviate Jakarta's perennial traffic woes, even after failing to convince workers and employers to alter their schedules last year.",
-        category = "Jakarta",
-        publishedAt = "2 months ago",
-        premiumBadge = "premium",
-    ),
-)
+import myplayground.example.jakpost.ui.utils.sampleNews
 
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = viewModel(
         factory = ViewModelFactory(
-            Injection.provideNewsRepository(),
+            Injection.provideNewsRepository(LocalContext.current),
             DatastoreSettings.getInstance(LocalContext.current.dataStore),
         )
     ),
+    navigateToNewsDetail: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState(initial = UiState.Loading)
@@ -97,6 +69,20 @@ fun SearchScreen(
         is UiState.Loading -> {
             SearchContent(
                 isLoading = true,
+                navigateToNewsDetail = navigateToNewsDetail,
+                listNews = listOf(),
+                modifier = modifier,
+                onBackClick = navigateBack,
+                query = query,
+                onQueryChange = viewModel::onQueryChange,
+                onSearch = viewModel::onSearch
+            )
+        }
+
+        is UiState.NoData -> {
+            SearchContent(
+                isLoading = false,
+                navigateToNewsDetail = navigateToNewsDetail,
                 listNews = listOf(),
                 modifier = modifier,
                 onBackClick = navigateBack,
@@ -109,6 +95,7 @@ fun SearchScreen(
         is UiState.Success -> {
             SearchContent(
                 isLoading = false,
+                navigateToNewsDetail = navigateToNewsDetail,
                 listNews = (uiState as UiState.Success).data,
                 modifier = modifier,
                 onBackClick = navigateBack,
@@ -129,6 +116,7 @@ fun SearchContentPreview() {
     JakPostTheme {
         SearchContent(
             isLoading = false,
+            navigateToNewsDetail = {},
             listNews = sampleNews,
             modifier = Modifier,
             query = "",
@@ -141,6 +129,7 @@ fun SearchContentPreview() {
 @Composable
 fun SearchContent(
     modifier: Modifier,
+    navigateToNewsDetail: (Int) -> Unit,
     query: String,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
@@ -180,7 +169,7 @@ fun SearchContent(
             LazyColumn {
                 if (isLoading) {
                     items(5) {
-                        SkeletonLoadingItem()
+                        NewsBlockSkeletonView()
                         Divider(
                             color = LightStroke,
                             thickness = 1.dp,
@@ -191,7 +180,7 @@ fun SearchContent(
                     }
                 } else {
                     items(listNews) { news ->
-                        NewsBlock(news)
+                        NewsBlock(news, navigateToNewsDetail = navigateToNewsDetail)
                         Divider(
                             color = LightStroke,
                             thickness = 1.dp,
@@ -207,9 +196,13 @@ fun SearchContent(
 }
 
 @Composable
-private fun NewsBlock(news: News) {
+private fun NewsBlock(news: News, navigateToNewsDetail: (Int) -> Unit) {
     Row(
-        modifier = Modifier.padding(20.dp, 16.dp)
+        modifier = Modifier
+            .padding(20.dp, 16.dp)
+            .clickable {
+                navigateToNewsDetail(news.id)
+            }
     ) {
         AsyncImage(
             model = news.image,
@@ -225,7 +218,7 @@ private fun NewsBlock(news: News) {
             Text(
                 text = news.title,
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -242,12 +235,12 @@ private fun NewsBlock(news: News) {
 @Composable
 fun NewsBlockPreview() {
     JakPostTheme {
-        NewsBlock(news = sampleNews[0])
+        NewsBlock(news = sampleNews[0], navigateToNewsDetail = {})
     }
 }
 
 @Composable
-fun SkeletonLoadingItem() {
+fun NewsBlockSkeletonView() {
     Row(
         modifier = Modifier.padding(20.dp, 16.dp)
     ) {
@@ -282,8 +275,8 @@ fun SkeletonLoadingItem() {
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun SkeletonLoadingItemPreview() {
+fun NewsBlockSkeletonViewPreview() {
     JakPostTheme {
-        SkeletonLoadingItem()
+        NewsBlockSkeletonView()
     }
 }

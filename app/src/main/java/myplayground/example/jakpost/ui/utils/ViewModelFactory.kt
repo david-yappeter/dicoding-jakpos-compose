@@ -6,6 +6,7 @@ import myplayground.example.jakpost.ThemeViewModel
 import myplayground.example.jakpost.local_storage.LocalStorageManager
 import myplayground.example.jakpost.repository.NewsRepository
 import myplayground.example.jakpost.ui.screens.home.HomeViewModel
+import myplayground.example.jakpost.ui.screens.news_detail.NewsDetailViewModel
 import myplayground.example.jakpost.ui.screens.search.SearchViewModel
 import myplayground.example.jakpost.ui.screens.setting.SettingViewModel
 import java.lang.IllegalArgumentException
@@ -24,6 +25,8 @@ class ViewModelFactory(
             return SettingViewModel(repository, localStorageManager) as T
         } else if (modelClass.isAssignableFrom(ThemeViewModel::class.java)) {
             return ThemeViewModel.getInstance(localStorageManager) as T
+        } else if (modelClass.isAssignableFrom(NewsDetailViewModel::class.java)) {
+            return NewsDetailViewModel(repository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
