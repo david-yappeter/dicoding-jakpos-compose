@@ -50,6 +50,10 @@ android {
 
 dependencies {
     def retrofit_version = '2.6.2'
+    def datastore_version = '1.0.0'
+
+    // datastore
+    implementation "androidx.datastore:datastore-preferences:${datastore_version}"
 
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:${retrofit_version}"

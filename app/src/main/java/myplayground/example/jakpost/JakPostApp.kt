@@ -11,9 +11,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import myplayground.example.jakpost.ui.layout.Appbar
+import myplayground.example.jakpost.ui.layout.BottomBar
 import myplayground.example.jakpost.ui.navigation.Screen
 import myplayground.example.jakpost.ui.screens.home.HomeScreen
 import myplayground.example.jakpost.ui.screens.search.SearchScreen
+import myplayground.example.jakpost.ui.screens.setting.SettingScreen
 
 @Composable
 fun JakPostApp(
@@ -27,7 +29,11 @@ fun JakPostApp(
         modifier = modifier,
         topBar = {
             if (currentRoute != Screen.Search.route)
-                Appbar(navController)
+                Appbar(navController = navController)
+        },
+        bottomBar = {
+            if (currentRoute != Screen.Search.route)
+                BottomBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
@@ -38,6 +44,12 @@ fun JakPostApp(
             composable(Screen.Home.route) {
                 HomeScreen()
             }
+            composable(Screen.Favourite.route) {
+                HomeScreen()
+            }
+            composable(Screen.Setting.route) {
+                SettingScreen()
+            }
             composable(Screen.Search.route) {
                 SearchScreen(
                     navigateBack = {
@@ -45,8 +57,8 @@ fun JakPostApp(
                     }
                 )
             }
-
         }
     }
-
 }
+
+

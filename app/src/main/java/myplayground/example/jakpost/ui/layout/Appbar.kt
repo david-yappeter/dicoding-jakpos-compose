@@ -60,9 +60,7 @@ fun Appbar(
                 .size(40.dp)
                 .align(Alignment.CenterEnd)
                 .clickable {
-                    navController.navigate(Screen.Search.route) {
-                        //                        popUpTo(navController.graph.findStartDestination().id)
-                    }
+                    navController.navigate(Screen.Search.route)
                 }
         )
     }

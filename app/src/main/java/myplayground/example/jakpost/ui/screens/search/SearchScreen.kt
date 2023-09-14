@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,6 +36,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import myplayground.example.jakpost.R
 import myplayground.example.jakpost.di.Injection
+import myplayground.example.jakpost.local_storage.DatastoreSettings
+import myplayground.example.jakpost.local_storage.dataStore
 import myplayground.example.jakpost.model.News
 import myplayground.example.jakpost.ui.common.UiState
 import myplayground.example.jakpost.ui.components.Search
@@ -79,7 +82,10 @@ val sampleNews = listOf(
 fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = viewModel(
-        factory = ViewModelFactory(Injection.provideNewsRepository())
+        factory = ViewModelFactory(
+            Injection.provideNewsRepository(),
+            DatastoreSettings.getInstance(LocalContext.current.dataStore),
+        )
     ),
     navigateBack: () -> Unit,
 ) {
