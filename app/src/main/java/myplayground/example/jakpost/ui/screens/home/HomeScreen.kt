@@ -77,7 +77,7 @@ fun HomeScreen(
         isLoading = isLoading,
         modifier = modifier,
         selectedTabIndex = selectedTabIndex,
-        tabs = viewModel.tabList.map { it.toString().uppercase() },
+        tabs = viewModel.tabList.map { it.toCapitalCase().uppercase() },
         onTabClick = viewModel::onTabClick,
         listNews = news,
         navigateToNewsDetail = navigateToNewsDetail,
