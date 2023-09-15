@@ -35,6 +35,7 @@ fun JakTabBar(
     selectedTabIndex: Int,
     tabs: List<String>,
     onTabClick: (Int) -> Unit,
+    disabled: Boolean = false,
 ) {
     val density = LocalDensity.current
     val tabWidths = remember {
@@ -64,7 +65,11 @@ fun JakTabBar(
         tabs.forEachIndexed { tabIndex, tab ->
             Tab(
                 selected = selectedTabIndex == tabIndex,
-                onClick = { onTabClick(tabIndex) },
+                onClick = {
+                    if (!disabled) {
+                        onTabClick(tabIndex)
+                    }
+                },
                 text = {
                     Text(
                         text = tab,
