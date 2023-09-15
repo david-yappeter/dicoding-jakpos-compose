@@ -6,6 +6,7 @@ import myplayground.example.jakpost.ThemeViewModel
 import myplayground.example.jakpost.local_storage.LocalStorageManager
 import myplayground.example.jakpost.repository.NewsRepository
 import myplayground.example.jakpost.ui.screens.about.AboutViewModel
+import myplayground.example.jakpost.ui.screens.favourite.FavouriteViewModel
 import myplayground.example.jakpost.ui.screens.home.HomeViewModel
 import myplayground.example.jakpost.ui.screens.news_detail.NewsDetailViewModel
 import myplayground.example.jakpost.ui.screens.search.SearchViewModel
@@ -30,6 +31,8 @@ class ViewModelFactory(
             return NewsDetailViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(AboutViewModel::class.java)) {
             return AboutViewModel(repository) as T
+        } else if (modelClass.isAssignableFrom(FavouriteViewModel::class.java)) {
+            return FavouriteViewModel(repository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)

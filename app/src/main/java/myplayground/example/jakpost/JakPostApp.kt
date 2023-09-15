@@ -21,6 +21,7 @@ import myplayground.example.jakpost.ui.layout.BottomBar
 import myplayground.example.jakpost.ui.layout.NavigationDrawer
 import myplayground.example.jakpost.ui.navigation.Screen
 import myplayground.example.jakpost.ui.screens.about.AboutScreen
+import myplayground.example.jakpost.ui.screens.favourite.FavouriteScreen
 import myplayground.example.jakpost.ui.screens.home.HomeScreen
 import myplayground.example.jakpost.ui.screens.news_detail.NewsDetailScreen
 import myplayground.example.jakpost.ui.screens.search.SearchScreen
@@ -72,7 +73,7 @@ fun JakPostApp(
                     HomeScreen()
                 }
                 composable(Screen.Favourite.route) {
-                    HomeScreen()
+                    FavouriteScreen()
                 }
                 composable(Screen.Setting.route) {
                     SettingScreen()
