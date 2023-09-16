@@ -6,7 +6,6 @@ import myplayground.example.jakpost.ThemeViewModel
 import myplayground.example.jakpost.local_storage.LocalStorageManager
 import myplayground.example.jakpost.repository.LocalNewsRepository
 import myplayground.example.jakpost.repository.NewsRepository
-import myplayground.example.jakpost.ui.screens.about.AboutViewModel
 import myplayground.example.jakpost.ui.screens.favourite.FavouriteViewModel
 import myplayground.example.jakpost.ui.screens.home.HomeViewModel
 import myplayground.example.jakpost.ui.screens.news_detail.NewsDetailViewModel
@@ -31,8 +30,6 @@ class ViewModelFactory(
             return ThemeViewModel.getInstance(localStorageManager) as T
         } else if (modelClass.isAssignableFrom(NewsDetailViewModel::class.java)) {
             return NewsDetailViewModel(newsRepository, localNewsRepository) as T
-        } else if (modelClass.isAssignableFrom(AboutViewModel::class.java)) {
-            return AboutViewModel(newsRepository) as T
         } else if (modelClass.isAssignableFrom(FavouriteViewModel::class.java)) {
             return FavouriteViewModel(localNewsRepository) as T
         }

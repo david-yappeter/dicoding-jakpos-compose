@@ -63,7 +63,7 @@ object DrawerParams {
             {
                 Icon(
                     imageVector = Icons.Default.Home,
-                    contentDescription = "Home",
+                    contentDescription = "home_page",
                     modifier = Modifier.size(28.dp),
                     tint = MaterialTheme.colorScheme.primary,
                 )
@@ -76,7 +76,7 @@ object DrawerParams {
             {
                 Icon(
                     imageVector = Icons.Default.Info,
-                    contentDescription = "About",
+                    contentDescription = "about_page",
                     modifier = Modifier.size(28.dp),
                     tint = MaterialTheme.colorScheme.primary,
                 )
