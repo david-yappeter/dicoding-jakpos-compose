@@ -6,7 +6,6 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
@@ -24,11 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import myplayground.example.jakpost.ui.theme.JakPostTheme
+import myplayground.example.jakpost.ui.utils.toSnakeCase
 
 @Composable
 fun JakTabBar(
@@ -64,6 +65,7 @@ fun JakTabBar(
     ) {
         tabs.forEachIndexed { tabIndex, tab ->
             Tab(
+                modifier = Modifier.testTag("tab_bar_$tab"),
                 selected = selectedTabIndex == tabIndex,
                 onClick = {
                     if (!disabled) {

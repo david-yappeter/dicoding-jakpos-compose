@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -113,7 +114,8 @@ fun SearchContent(
     onBackClick: () -> Unit = {}
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.
+        testTag("search_page"),
     ) {
 
         Row(
@@ -134,7 +136,8 @@ fun SearchContent(
                     })
             Spacer(modifier = Modifier.width(20.dp))
             Search(
-                modifier = Modifier.align(Alignment.CenterVertically),
+                modifier = Modifier.align(Alignment.CenterVertically).
+                testTag("my_search_bar"),
                 query = query,
                 onQueryChange = onQueryChange,
                 onSearch = onSearch,
@@ -178,6 +181,7 @@ fun SearchContent(
 private fun NewsBlock(news: News, navigateToNewsDetail: (Int) -> Unit) {
     Row(
         modifier = Modifier
+            .testTag("news_block")
             .padding(20.dp, 16.dp)
             .clickable {
                 navigateToNewsDetail(news.id)
@@ -225,6 +229,7 @@ fun NewsBlockSkeletonView() {
     ) {
         Box(
             modifier = Modifier
+                .testTag("news_block_skeleton_view")
                 .size(70.dp)
                 .fillMaxHeight()
                 .clip(MaterialTheme.shapes.medium)

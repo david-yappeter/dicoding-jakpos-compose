@@ -37,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +54,7 @@ data class AppDrawerItemInfo<T>(
     val title: String,
     val drawable: @Composable () -> Unit,
     val description: String,
+    val testTag: String,
 )
 
 object DrawerParams {
@@ -69,6 +71,7 @@ object DrawerParams {
                 )
             },
             "Home menu",
+            testTag = "navigation_item_home",
         ),
         AppDrawerItemInfo(
             Screen.About,
@@ -82,6 +85,7 @@ object DrawerParams {
                 )
             },
             "About menu",
+            testTag = "navigation_item_about",
         ),
     )
 }
@@ -179,6 +183,7 @@ fun <T> AppDrawerItem(item: AppDrawerItemInfo<T>, onClick: (options: T) -> Unit)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag(item.testTag)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = rememberRipple(

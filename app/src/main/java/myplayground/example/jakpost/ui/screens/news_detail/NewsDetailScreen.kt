@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -91,6 +92,7 @@ fun NewsDetailScreen(
     }
 
     NewsDetailContent(
+        modifier = modifier,
         isLoading = isLoading,
         news = news,
         onBackClick = navigateBack,
@@ -146,6 +148,7 @@ fun NewsDetailContent(
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .size(36.dp)
+                        .testTag("on_back_click")
                         .clickable {
                             onBackClick()
                         },
@@ -177,7 +180,9 @@ fun NewsDetailContent(
 
 @Composable
 fun NewsBlock(news: News) {
-    Column(modifier = Modifier.padding(16.dp, 0.dp)) {
+    Column(modifier = Modifier
+        .padding(16.dp, 0.dp)
+        .testTag("news_detail_block")) {
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = news.title,
@@ -231,7 +236,11 @@ fun NewsBlock(news: News) {
 @Composable
 fun NewsBlockSkeletonView() {
     val boxModifier = Modifier.clip(MaterialTheme.shapes.medium)
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("news_detail_block_skeleton_view")
+    ) {
         Column(modifier = Modifier.padding(16.dp, 0.dp)) {
             Spacer(modifier = Modifier.height(12.dp))
             Box(

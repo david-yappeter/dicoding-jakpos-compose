@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ fun Appbar(
             modifier = Modifier
                 .size(40.dp)
                 .align(Alignment.CenterStart)
+                .testTag("hamburger_icon")
                 .clickable {
                     coroutineScope.launch {
                         drawerState.open()
@@ -71,6 +73,7 @@ fun Appbar(
             modifier = Modifier
                 .size(40.dp)
                 .align(Alignment.CenterEnd)
+                .testTag("search_icon")
                 .clickable {
                     navController.navigate(Screen.Search.route)
                 }

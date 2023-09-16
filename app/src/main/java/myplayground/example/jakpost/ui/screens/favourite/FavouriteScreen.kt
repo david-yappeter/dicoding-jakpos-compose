@@ -22,6 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,7 +38,6 @@ import myplayground.example.jakpost.local_storage.dataStore
 import myplayground.example.jakpost.ui.common.UiState
 import myplayground.example.jakpost.ui.components.NoData
 import myplayground.example.jakpost.ui.components.shimmerBrush
-import myplayground.example.jakpost.ui.screens.home.HomeNewsBlock
 import myplayground.example.jakpost.ui.theme.JakPostTheme
 import myplayground.example.jakpost.ui.theme.Subtitle
 import myplayground.example.jakpost.ui.utils.ViewModelFactory
@@ -114,7 +116,6 @@ fun FavouriteContent(
             }
         }
     }
-
 }
 
 @Composable
@@ -122,11 +123,13 @@ fun FavouriteNewsBlock(
     newsEntity: FavouriteNewsEntity,
     navigateToNewsDetail: (Int) -> Unit,
 ) {
-    Column(modifier = Modifier
-        .padding(bottom = 20.dp)
-        .clickable {
-            navigateToNewsDetail(newsEntity.id)
-        }) {
+    Column(
+        modifier = Modifier
+            .padding(bottom = 20.dp)
+            .testTag("favourite_news_block")
+            .clickable {
+                navigateToNewsDetail(newsEntity.id)
+            }) {
         AsyncImage(
             model = newsEntity.imageUrl ?: "",
             contentDescription = "Thumbnail",
@@ -157,7 +160,11 @@ fun FavouriteNewsBlock(
 @Composable
 fun FavouriteNewsBlockSkeletonView() {
     val boxModifier = Modifier.clip(MaterialTheme.shapes.medium)
-    Column(modifier = Modifier.padding(bottom = 20.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(bottom = 20.dp)
+            .testTag("favourite_skeleton_view"),
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

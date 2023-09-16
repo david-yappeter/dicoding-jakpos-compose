@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,7 +97,7 @@ fun HomeContent(
     navigateToNewsDetail: (Int) -> Unit = {},
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag("home_page"),
     ) {
         JakTabBar(
             selectedTabIndex = selectedTabIndex,
@@ -130,6 +131,7 @@ fun HomeNewsBlock(
 ) {
     Column(modifier = Modifier
         .padding(bottom = 20.dp)
+        .testTag("home_news_block")
         .clickable {
             navigateToNewsDetail(news.id)
         }) {
@@ -163,7 +165,9 @@ fun HomeNewsBlock(
 @Composable
 fun HomeNewsBlockSkeletonView() {
     val boxModifier = Modifier.clip(MaterialTheme.shapes.medium)
-    Column(modifier = Modifier.padding(bottom = 20.dp)) {
+    Column(modifier = Modifier
+        .padding(bottom = 20.dp)
+        .testTag("home_skeleton_view")) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

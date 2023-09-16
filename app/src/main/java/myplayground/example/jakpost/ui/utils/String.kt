@@ -9,3 +9,11 @@ fun String.capitalized(): String {
         else it.toString()
     }
 }
+
+fun String.toSnakeCase(): String {
+    return this
+        .replace(Regex("[A-Z]")) {
+            "_${it.value.lowercase()}"
+        }
+        .removePrefix("_")
+}

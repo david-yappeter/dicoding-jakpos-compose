@@ -103,11 +103,7 @@ fun JakPostApp(
                     )
                 }
                 composable(Screen.About.route) {
-                    AboutScreen(
-                        navigateBack = {
-                            navController.navigateUp()
-                        },
-                    )
+                    AboutScreen()
                 }
             }
         }
