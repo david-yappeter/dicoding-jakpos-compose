@@ -33,6 +33,7 @@ import myplayground.example.jakpost.di.Injection
 import myplayground.example.jakpost.local_storage.DatastoreSettings
 import myplayground.example.jakpost.local_storage.dataStore
 import myplayground.example.jakpost.ui.common.UiState
+import myplayground.example.jakpost.ui.components.NoData
 import myplayground.example.jakpost.ui.components.shimmerBrush
 import myplayground.example.jakpost.ui.screens.home.HomeNewsBlock
 import myplayground.example.jakpost.ui.theme.JakPostTheme
@@ -55,6 +56,7 @@ fun FavouriteScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     var isLoading = false
+    var noData = false
     var newsEntities: List<FavouriteNewsEntity> = listOf()
 
     when (uiState) {
@@ -72,7 +74,7 @@ fun FavouriteScreen(
         }
 
         is UiState.NoData -> {
-
+            noData = true
         }
     }
 
@@ -80,6 +82,7 @@ fun FavouriteScreen(
         isLoading = isLoading,
         newsEntities = newsEntities,
         navigateToNewsDetail = navigateToNewsDetail,
+        noData = noData,
     )
 }
 
@@ -87,22 +90,27 @@ fun FavouriteScreen(
 fun FavouriteContent(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
+    noData: Boolean = false,
     newsEntities: List<FavouriteNewsEntity>,
     navigateToNewsDetail: (Int) -> Unit = {},
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        if (isLoading) {
-            items(5) {
-                FavouriteNewsBlockSkeletonView()
-            }
-        } else {
-            items(newsEntities) { newsEntity ->
-                FavouriteNewsBlock(
-                    newsEntity = newsEntity,
-                    navigateToNewsDetail = navigateToNewsDetail,
-                )
+    if (noData) {
+        NoData()
+    } else {
+        LazyColumn(
+            modifier = modifier.fillMaxSize(),
+        ) {
+            if (isLoading) {
+                items(5) {
+                    FavouriteNewsBlockSkeletonView()
+                }
+            } else {
+                items(newsEntities) { newsEntity ->
+                    FavouriteNewsBlock(
+                        newsEntity = newsEntity,
+                        navigateToNewsDetail = navigateToNewsDetail,
+                    )
+                }
             }
         }
     }

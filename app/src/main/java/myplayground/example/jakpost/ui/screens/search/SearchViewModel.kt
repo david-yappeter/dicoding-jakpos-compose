@@ -37,7 +37,11 @@ class SearchViewModel(private val repository: NewsRepository) : ViewModel() {
             repository.fetchAll(search).catch {
                 _uiState.value = UiState.Error(it.message.toString())
             }.collect { news ->
-                _uiState.value = UiState.Success(news)
+                if (news.isEmpty()) {
+                    _uiState.value = UiState.NoData
+                } else {
+                    _uiState.value = UiState.Success(news)
+                }
             }
         }
     }

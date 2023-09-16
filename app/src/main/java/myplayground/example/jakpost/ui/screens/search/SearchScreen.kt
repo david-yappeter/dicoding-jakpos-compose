@@ -40,6 +40,7 @@ import myplayground.example.jakpost.local_storage.DatastoreSettings
 import myplayground.example.jakpost.local_storage.dataStore
 import myplayground.example.jakpost.model.News
 import myplayground.example.jakpost.ui.common.UiState
+import myplayground.example.jakpost.ui.components.NoData
 import myplayground.example.jakpost.ui.components.Search
 import myplayground.example.jakpost.ui.components.shimmerBrush
 import myplayground.example.jakpost.ui.theme.JakPostTheme
@@ -65,66 +66,38 @@ fun SearchScreen(
     val uiState by viewModel.uiState.collectAsState(initial = UiState.Loading)
     val query by viewModel.query
 
+    var isLoading = false
+    var noData = false
+    var listNews: List<News> = listOf()
 
     when (uiState) {
         is UiState.Loading -> {
-            SearchContent(
-                isLoading = true,
-                navigateToNewsDetail = navigateToNewsDetail,
-                listNews = listOf(),
-                modifier = modifier,
-                onBackClick = navigateBack,
-                query = query,
-                onQueryChange = viewModel::onQueryChange,
-                onSearch = viewModel::onSearch
-            )
+            isLoading = true
         }
 
-        is UiState.NoData -> {
-            SearchContent(
-                isLoading = false,
-                navigateToNewsDetail = navigateToNewsDetail,
-                listNews = listOf(),
-                modifier = modifier,
-                onBackClick = navigateBack,
-                query = query,
-                onQueryChange = viewModel::onQueryChange,
-                onSearch = viewModel::onSearch
-            )
+        is UiState.Error -> {
         }
 
         is UiState.Success -> {
-            SearchContent(
-                isLoading = false,
-                navigateToNewsDetail = navigateToNewsDetail,
-                listNews = (uiState as UiState.Success).data,
-                modifier = modifier,
-                onBackClick = navigateBack,
-                query = query,
-                onQueryChange = viewModel::onQueryChange,
-                onSearch = viewModel::onSearch
-            )
+            listNews = (uiState as UiState.Success).data
         }
 
-        is UiState.Error -> {}
+        is UiState.NoData -> {
+            noData = true
+        }
     }
-}
 
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun SearchContentPreview() {
-    JakPostTheme {
-        SearchContent(
-            isLoading = false,
-            navigateToNewsDetail = {},
-            listNews = sampleNews,
-            modifier = Modifier,
-            query = "",
-            onQueryChange = {},
-            onSearch = {}
-        )
-    }
+    SearchContent(
+        modifier = modifier,
+        isLoading = isLoading,
+        noData = noData,
+        navigateToNewsDetail = navigateToNewsDetail,
+        listNews = listNews,
+        onBackClick = navigateBack,
+        query = query,
+        onQueryChange = viewModel::onQueryChange,
+        onSearch = viewModel::onSearch,
+    )
 }
 
 @Composable
@@ -135,6 +108,7 @@ fun SearchContent(
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
     isLoading: Boolean,
+    noData: Boolean = false,
     listNews: List<News>,
     onBackClick: () -> Unit = {}
 ) {
@@ -166,29 +140,33 @@ fun SearchContent(
                 onSearch = onSearch,
             )
         }
-        Box(modifier = Modifier.weight(1F)) {
-            LazyColumn {
-                if (isLoading) {
-                    items(5) {
-                        NewsBlockSkeletonView()
-                        Divider(
-                            color = LightStroke,
-                            thickness = 1.dp,
-                            modifier = Modifier
-                                .padding(start = 12.dp, end = 12.dp)
-                                .fillMaxWidth()
-                        )
-                    }
-                } else {
-                    items(listNews) { news ->
-                        NewsBlock(news, navigateToNewsDetail = navigateToNewsDetail)
-                        Divider(
-                            color = LightStroke,
-                            thickness = 1.dp,
-                            modifier = Modifier
-                                .padding(start = 12.dp, end = 12.dp)
-                                .fillMaxWidth()
-                        )
+        if (noData) {
+            NoData()
+        } else {
+            Box(modifier = Modifier.weight(1F)) {
+                LazyColumn {
+                    if (isLoading) {
+                        items(5) {
+                            NewsBlockSkeletonView()
+                            Divider(
+                                color = LightStroke,
+                                thickness = 1.dp,
+                                modifier = Modifier
+                                    .padding(start = 12.dp, end = 12.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+                    } else {
+                        items(listNews) { news ->
+                            NewsBlock(news, navigateToNewsDetail = navigateToNewsDetail)
+                            Divider(
+                                color = LightStroke,
+                                thickness = 1.dp,
+                                modifier = Modifier
+                                    .padding(start = 12.dp, end = 12.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
                     }
                 }
             }
@@ -279,5 +257,23 @@ fun NewsBlockSkeletonView() {
 fun NewsBlockSkeletonViewPreview() {
     JakPostTheme {
         NewsBlockSkeletonView()
+    }
+}
+
+
+@Preview(showBackground = true, device = Devices.PIXEL_4)
+@Preview(showBackground = true, device = Devices.PIXEL_4, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+fun SearchContentPreview() {
+    JakPostTheme {
+        SearchContent(
+            isLoading = false,
+            navigateToNewsDetail = {},
+            listNews = sampleNews,
+            modifier = Modifier,
+            query = "",
+            onQueryChange = {},
+            onSearch = {}
+        )
     }
 }

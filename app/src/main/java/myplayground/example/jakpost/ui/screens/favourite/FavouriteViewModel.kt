@@ -23,7 +23,11 @@ class FavouriteViewModel(
             localNewsRepository.fetchAll().catch {
                 _uiState.value = UiState.Error(it.message.toString())
             }.collect { newsEntities ->
-                _uiState.value = UiState.Success(newsEntities)
+                if (newsEntities.isEmpty()) {
+                    _uiState.value = UiState.NoData
+                } else {
+                    _uiState.value = UiState.Success(newsEntities)
+                }
             }
         }
     }
