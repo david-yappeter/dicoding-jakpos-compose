@@ -10,8 +10,6 @@ import myplayground.example.jakpost.ui.screens.favourite.FavouriteViewModel
 import myplayground.example.jakpost.ui.screens.home.HomeViewModel
 import myplayground.example.jakpost.ui.screens.news_detail.NewsDetailViewModel
 import myplayground.example.jakpost.ui.screens.search.SearchViewModel
-import myplayground.example.jakpost.ui.screens.setting.SettingViewModel
-import java.lang.IllegalArgumentException
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(
@@ -24,8 +22,6 @@ class ViewModelFactory(
             return HomeViewModel(newsRepository) as T
         } else if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
             return SearchViewModel(newsRepository) as T
-        } else if (modelClass.isAssignableFrom(SettingViewModel::class.java)) {
-            return SettingViewModel(newsRepository, localStorageManager) as T
         } else if (modelClass.isAssignableFrom(ThemeViewModel::class.java)) {
             return ThemeViewModel.getInstance(localStorageManager) as T
         } else if (modelClass.isAssignableFrom(NewsDetailViewModel::class.java)) {

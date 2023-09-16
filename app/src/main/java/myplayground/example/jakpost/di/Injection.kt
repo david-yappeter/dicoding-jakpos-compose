@@ -1,7 +1,6 @@
 package myplayground.example.jakpost.di
 
 import android.content.Context
-import myplayground.example.jakpost.database.FavouriteNewsDao
 import myplayground.example.jakpost.database.FavouriteNewsDatabase
 import myplayground.example.jakpost.repository.FakeNewsRepository
 import myplayground.example.jakpost.repository.LocalNewsRepository

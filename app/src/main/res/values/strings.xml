@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">JakPost</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_search">Search</string>
 </resources>

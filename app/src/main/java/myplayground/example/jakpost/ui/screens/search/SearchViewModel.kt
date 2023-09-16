@@ -31,7 +31,7 @@ class SearchViewModel(private val repository: NewsRepository) : ViewModel() {
         fetchAll(q)
     }
 
-    fun fetchAll(search: String = "") {
+    private fun fetchAll(search: String = "") {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
             repository.fetchAll(search).catch {

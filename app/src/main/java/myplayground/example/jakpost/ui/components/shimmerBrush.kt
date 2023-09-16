@@ -20,13 +20,13 @@ fun shimmerBrush(showShimmer: Boolean = true, targetValue: Float = 1000F): Brush
             MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
         )
 
-        val transition = rememberInfiniteTransition()
+        val transition = rememberInfiniteTransition(label = "")
         val translateAnimation = transition.animateFloat(
             initialValue = 0f,
             targetValue = targetValue,
             animationSpec = infiniteRepeatable(
                 animation = tween(1000), repeatMode = RepeatMode.Reverse
-            )
+            ), label = ""
         )
         Brush.linearGradient(
             colors = shimmerColors,

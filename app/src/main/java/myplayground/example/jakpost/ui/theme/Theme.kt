@@ -98,7 +98,7 @@ private fun customDynamicDarkColorScheme(context: Context): ColorScheme {
     }
 }
 
-private val DarkColorScheme = darkColorScheme(
+private val darkColorScheme = darkColorScheme(
     primary = PrincetonOrange,
     secondary = YellowOrange,
     tertiary = DeepSaffron,
@@ -113,7 +113,7 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = White,
 )
 
-private val LightColorScheme = lightColorScheme(
+private val lightColorScheme = lightColorScheme(
     primary = PrincetonOrange,
     secondary = YellowOrange,
     tertiary = DeepSaffron,
@@ -142,8 +142,8 @@ fun JakPostTheme(
                 customDynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> darkColorScheme
+        else -> lightColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {

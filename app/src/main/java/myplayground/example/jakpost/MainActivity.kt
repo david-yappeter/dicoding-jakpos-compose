@@ -1,15 +1,14 @@
 package myplayground.example.jakpost
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import myplayground.example.jakpost.di.Injection
 import myplayground.example.jakpost.local_storage.DatastoreSettings
 import myplayground.example.jakpost.local_storage.dataStore
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    JakPostApp()
+                    JakPostSplashScreen()
                 }
             }
         }

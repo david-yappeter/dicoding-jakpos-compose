@@ -1,13 +1,16 @@
 package myplayground.example.jakpost
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -16,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import kotlinx.coroutines.delay
 import myplayground.example.jakpost.ui.layout.Appbar
 import myplayground.example.jakpost.ui.layout.BottomBar
 import myplayground.example.jakpost.ui.layout.NavigationDrawer
@@ -26,6 +30,7 @@ import myplayground.example.jakpost.ui.screens.home.HomeScreen
 import myplayground.example.jakpost.ui.screens.news_detail.NewsDetailScreen
 import myplayground.example.jakpost.ui.screens.search.SearchScreen
 import myplayground.example.jakpost.ui.screens.setting.SettingScreen
+import myplayground.example.jakpost.ui.screens.splash.SplashScreen
 
 @Composable
 fun JakPostApp(
@@ -33,6 +38,8 @@ fun JakPostApp(
     navController: NavHostController = rememberNavController(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
+    SplashScreen(modifier = modifier)
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -109,5 +116,26 @@ fun JakPostApp(
         }
     }
 }
+
+@Composable
+fun JakPostSplashScreen(
+    modifier: Modifier = Modifier,
+) {
+    // Determine whether to show the splash screen
+    var showSplashScreen by remember { mutableStateOf(true) }
+
+    // Simulate a delay (e.g., 2 seconds) before hiding the splash screen
+    LaunchedEffect(showSplashScreen) {
+        delay(1500)
+        showSplashScreen = false
+    }
+
+    if (showSplashScreen) {
+        SplashScreen(modifier = modifier)
+    } else {
+        JakPostApp()
+    }
+}
+
 
 

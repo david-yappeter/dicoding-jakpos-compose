@@ -29,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import myplayground.example.jakpost.ui.theme.JakPostTheme
-import myplayground.example.jakpost.ui.utils.toSnakeCase
 
 @Composable
 fun JakTabBar(

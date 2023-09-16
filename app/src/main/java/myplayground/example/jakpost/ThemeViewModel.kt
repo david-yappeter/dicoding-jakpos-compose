@@ -1,15 +1,11 @@
 package myplayground.example.jakpost
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import myplayground.example.jakpost.local_storage.DatastoreSettings
 import myplayground.example.jakpost.local_storage.LocalStorageManager
 
 open class ThemeViewModel private constructor(
