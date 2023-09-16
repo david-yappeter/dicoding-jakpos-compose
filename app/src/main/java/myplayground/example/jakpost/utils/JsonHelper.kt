@@ -14,7 +14,6 @@ class JsonHelper {
 
                 Json.decodeFromString(jsonText)
             } catch (e: Exception) {
-                throw Error(e)
                 e.printStackTrace()
                 null
             }

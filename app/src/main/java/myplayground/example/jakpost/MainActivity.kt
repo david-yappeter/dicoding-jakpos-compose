@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private val themeViewModel: ThemeViewModel by viewModels {
         ViewModelFactory(
             Injection.provideNewsRepository(context = this),
+            Injection.provideLocalNewsRepository(context = this),
             DatastoreSettings.getInstance(applicationContext.dataStore),
         )
     }

@@ -1,6 +1,5 @@
 package myplayground.example.jakpost.ui.screens.home
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -40,9 +39,6 @@ class HomeViewModel(private val repository: NewsRepository) : ViewModel() {
             repository.fetchByCategory(category).catch {
                 _uiState.value = UiState.Error(it.message.toString())
             }.collect { news ->
-                Log.i("FETCH SUCCCESSS", tab.toString())
-                Log.i("FETCH SUCCCESSS", category.toString())
-                Log.i("FETCH SUCCCESSS", news.toString())
                 _uiState.value = UiState.Success(news)
             }
         }

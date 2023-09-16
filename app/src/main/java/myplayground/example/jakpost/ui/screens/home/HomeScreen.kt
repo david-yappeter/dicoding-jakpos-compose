@@ -46,6 +46,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(
         factory = ViewModelFactory(
             Injection.provideNewsRepository(LocalContext.current),
+            Injection.provideLocalNewsRepository(context = LocalContext.current),
             DatastoreSettings.getInstance(LocalContext.current.dataStore),
         )
     ),

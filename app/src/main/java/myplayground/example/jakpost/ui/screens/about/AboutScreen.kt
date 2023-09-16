@@ -18,6 +18,7 @@ fun AboutScreen(
     viewModel: AboutViewModel = viewModel(
         factory = ViewModelFactory(
             Injection.provideNewsRepository(LocalContext.current),
+            Injection.provideLocalNewsRepository(LocalContext.current),
             DatastoreSettings.getInstance(LocalContext.current.dataStore),
         )
     )

@@ -12,14 +12,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import myplayground.example.jakpost.ui.navigation.NavigationItem
 import myplayground.example.jakpost.ui.navigation.Screen
@@ -30,8 +28,8 @@ fun BottomBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
 ) {
-    var selectedScreen: Screen by remember { mutableStateOf(Screen.Home) }
-
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = Screen.fromRoute(navBackStackEntry?.destination?.route)
 
     NavigationBar(
         modifier = modifier,
@@ -57,7 +55,6 @@ fun BottomBar(
 
         navigationItems.map { item ->
             NavigationBarItem(
-                //                modifier = Modifier.background(MaterialTheme.colorScheme.primary),
                 icon = {
                     Icon(
                         imageVector = item.icon,
@@ -71,14 +68,10 @@ fun BottomBar(
                         color = MaterialTheme.colorScheme.primary,
                     )
                 },
-                selected = selectedScreen == item.screen,
+                selected = currentScreen == item.screen,
                 onClick = {
-                    selectedScreen = item.screen
                     navController.navigate(item.screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        restoreState = true
+                        popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
                     }
                 }

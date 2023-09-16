@@ -16,9 +16,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -54,20 +60,21 @@ fun NewsDetailScreen(
     viewModel: NewsDetailViewModel = viewModel(
         factory = ViewModelFactory(
             Injection.provideNewsRepository(context = LocalContext.current),
+            Injection.provideLocalNewsRepository(context = LocalContext.current),
             DatastoreSettings.getInstance(ds = LocalContext.current.dataStore),
         )
     )
 ) {
     val uiState by viewModel.uiState.collectAsState(initial = UiState.Loading)
+    val isFavourite by viewModel.isFavourite
 
+    var isLoading = false
+    var news: News? = null
     when (uiState) {
         is UiState.Loading -> {
+            isLoading = true
+
             viewModel.getNewsById(newsId)
-            NewsDetailContent(
-                isLoading = true,
-                news = null,
-                onBackClick = navigateBack,
-            )
         }
 
         is UiState.NoData -> {
@@ -75,66 +82,96 @@ fun NewsDetailScreen(
         }
 
         is UiState.Success -> {
-            NewsDetailContent(
-                isLoading = false,
-                news = (uiState as UiState.Success<News>).data,
-                onBackClick = navigateBack,
-            )
+            news = (uiState as UiState.Success<News>).data
         }
 
         is UiState.Error -> {
             Text(text = "Error")
         }
     }
+
+    NewsDetailContent(
+        isLoading = isLoading,
+        news = news,
+        onBackClick = navigateBack,
+        toggleFavourite = viewModel::toggleFavourite,
+        isFavourite = isFavourite,
+    )
 }
 
 @Composable
 fun NewsDetailContent(
     modifier: Modifier = Modifier,
+    isFavourite: Boolean,
     onBackClick: () -> Unit,
     isLoading: Boolean,
+    toggleFavourite: (news: News) -> Unit = {},
     news: News?,
 ) {
-    Column(modifier = modifier) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .height(80.dp)
-                .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.primary)
-                .padding(start = 12.dp, end = 12.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Previous",
-                tint = MaterialTheme.colorScheme.onPrimary,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .size(36.dp)
-                    .clickable {
-                        onBackClick()
+    Scaffold(
+        modifier = modifier,
+        floatingActionButton = {
+            if (!isLoading) {
+                FloatingActionButton(
+                    onClick = {
+                        if (news != null) {
+                            toggleFavourite(news)
+                        }
                     },
-            )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = news?.category ?: "",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.titleLarge,
-            )
-        }
-        Column(
-            modifier = Modifier
-                .weight(1F)
-                .verticalScroll(rememberScrollState())
-        ) {
-            if (isLoading) {
-                NewsBlockSkeletonView()
-            } else {
-                if (news != null) {
-                    NewsBlock(news = news)
+                    shape = MaterialTheme.shapes.large,
+                ) {
+                    Icon(
+                        imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Favourite",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+    ) { innerPadding ->
+        Column(modifier = modifier.padding(innerPadding)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(80.dp)
+                    .fillMaxWidth()
+                    .background(color = MaterialTheme.colorScheme.primary)
+                    .padding(start = 12.dp, end = 12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Previous",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .size(36.dp)
+                        .clickable {
+                            onBackClick()
+                        },
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(
+                    text = news?.category ?: "",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1F)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                if (isLoading) {
+                    NewsBlockSkeletonView()
+                } else {
+                    if (news != null) {
+                        NewsBlock(news = news)
+                    }
                 }
             }
         }
+
     }
 }
 
@@ -304,6 +341,7 @@ fun NewsDetailContentPreview() {
             onBackClick = {},
             news = sampleNews[0],
             isLoading = false,
+            isFavourite = true
         )
     }
 }

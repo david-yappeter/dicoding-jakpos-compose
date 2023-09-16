@@ -75,7 +75,9 @@ fun JakPostApp(
                     )
                 }
                 composable(Screen.Favourite.route) {
-                    FavouriteScreen()
+                    FavouriteScreen(
+                        navigateToNewsDetail = navigateToNewsDetail,
+                    )
                 }
                 composable(Screen.Setting.route) {
                     SettingScreen()
