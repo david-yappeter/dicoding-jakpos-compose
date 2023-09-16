@@ -54,7 +54,7 @@ fun AboutContent(
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "a172bsy2045@bangkit.academy",
+            text = "davidyap11les@gmail.com",
             style = MaterialTheme.typography.titleMedium,
             color = Subtitle,
         )
